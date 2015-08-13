@@ -21,3 +21,16 @@ other feature requests for that client should be reordered.
 'Reports')
 
 ## Tech Stack
+Use any reasonably modern technology that you want. We are evaluating both your coding skill as well
+as your knowledge of modern technology.
+
+Make sure that your instructions for accessing or otherwise running your code are extremely clear.
+
+## Tips
+We develop on mac laptops, and our deployment infrastructure is all Linux on AWS, so having some
+skill at the command line, and specifically in a Linux environment is a big plus. One way to show
+what you know is by making your webapp run fairly easily on a mac and/or deploying it in the free
+tier of AWS's stack.
+
+We also have a strong affinity for open source technology. If your go-to technology stack includes
+proprietary software, you won't be helping yourself to use it in this project.
