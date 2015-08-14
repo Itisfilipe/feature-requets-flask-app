@@ -26,6 +26,21 @@ as your knowledge of modern technology.
 
 Make sure that your instructions for accessing or otherwise running your code are extremely clear.
 
+## Instructions for Submission
+
+Build your own public repo on github, and call it whatever you like. Build your solution in your
+repo, and include a README.md file that contains the detailed instructions for running your web app.
+Email the URL for your github repo to chris@britecore.com by the date specified in the email I sent
+you.
+
+## Questions and other such clarification
+
+One of the major goals in this project is to see how you fill in ambiguities in your own creative
+way. There is no such thing as a perfect project here, just interpretations of the instructions
+above, so we will not be answering any questions related to how to accomplish the project itself.
+
+Do the best you can, then send us the link to your repo.
+
 ## Tips
 We develop on mac laptops, and our deployment infrastructure is all Linux on AWS, so having some
 skill at the command line, and specifically in a Linux environment is a big plus. One way to show
