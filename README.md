@@ -30,7 +30,7 @@ Make sure that your instructions for accessing or otherwise running your code ar
 
 Build your own public repo on github, and call it whatever you like. Build your solution in your
 repo, and include a README.md file that contains the detailed instructions for running your web app.
-Email the URL for your github repo to chris@britecore.com by the date specified in the email I sent
+Email the URL for your github repo to phil@britecore.com by the date specified in the email I sent
 you.
 
 ## Questions and other such clarification
