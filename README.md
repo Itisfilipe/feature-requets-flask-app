@@ -37,9 +37,7 @@ you.
 
 One of the major goals in this project is to see how you fill in ambiguities in your own creative
 way. There is no such thing as a perfect project here, just interpretations of the instructions
-above, so we will not be answering any questions related to how to accomplish the project itself.
-
-Do the best you can, then send us the link to your repo.
+above, so be creative in your approach. Feel free to send an email with questions about intent or approach.
 
 ## Tips
 We develop on mac laptops, and our deployment infrastructure is all Linux on AWS, so having some
