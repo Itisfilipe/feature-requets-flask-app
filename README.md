@@ -21,8 +21,12 @@ other feature requests for that client should be reordered.
 'Reports')
 
 ## Tech Stack
-Use any reasonably modern technology that you want. We are evaluating both your coding skill as well
-as your knowledge of modern technology.
+* OS: Ubuntu
+* Server Side Scripting: Python 2.7+ or 3.5+
+* Server Framework: Flask
+* ORM: Sql-Alchemy
+* MVVM: Knockout.js
+* CSS: Bootstrap 4 or similar
 
 Make sure that your instructions for accessing or otherwise running your code are extremely clear.
 
@@ -30,19 +34,40 @@ Make sure that your instructions for accessing or otherwise running your code ar
 
 Build your own public repo on github, and call it whatever you like. Build your solution in your
 repo, and include a README.md file that contains the detailed instructions for running your web app.
-Email the URL for your github repo to phil@britecore.com once you begin the project so we can review your progress.
+Email the URL for your github repo to phil@britecore.com once you begin the project so we can review 
+your progress. Prior to submission, please bring up a live hosted example. AWS has a free tier if you 
+aren't certain where to host.
 
 ## Questions and other such clarification
-
 One of the major goals in this project is to see how you fill in ambiguities in your own creative
 way. There is no such thing as a perfect project here, just interpretations of the instructions
 above, so be creative in your approach. Feel free to send an email with questions about intent or approach.
 
-## Tips
-We develop on mac laptops, and our deployment infrastructure is all Linux on AWS, so having some
-skill at the command line, and specifically in a Linux environment is a big plus. One way to show
-what you know is by making your webapp run fairly easily on a mac and/or deploying it in the free
-tier of AWS's stack.
+Some or all of the following are typically true of the best projects we receive: 
+
+1. Modern, Crafted Backend. We received many projects that were based on a stock Django, Rails, or PHP template. Although the requirements of the project could easily be completed by relying solely on frameworks, that is rarely the case when dealing with a production application. Candidates who stood out didn't rely solely on these tools, which showed us they have the ability to solve complex problems well.
+
+2. Test Suites with Continuous Integration. Enterprise production requires rock solid stability. We are very test driven in our development processes and maintain a test suite of many thousands of tests for BriteCore. The best projects not only included a test suite, they were fully integrated with a Continuous Integration platform like Jenkins or Travis CI which would return a pass or fail status on the project before deployment.
+
+3. Automated Deployment. Speaking of deployment, the most valuable engineers understand how their code is deployed and utilize provisioners such as Salt Stack, Puppet, or Chef. The best projects integrated CI with a fully automated deploy to AWS, Heroku, or similar.
+
+4. Usable, Responsive Interface. There are many accessible CSS frameworks out there such as Bootstrap. All modern web applications should be responsive and these frameworks make it very easy to create a responsive modern interface that adheres to established design principles and formats well on all devices.
+
+5. MVVM Frontend. The modern web is highly interactive. Projects like Knockout.js and Angular make it very easy to deploy HTML bindings that interact with interface elements dependably and efficiently.
+
+--
+
+PROJECT FEATURES
+
+1. User Management. A system that holds client feature requests benefits greatly from user management. Some projects included admin controlled user accounts. Better projects included self enrollment via email. The best projects used a SSO solution like OAuth or SAML.
+
+2. Client / Project Management. As a base requirement, you had a fixed list of clients and projects, but the best projects included a simple admin interface associated with the admin login that gives users a basic CRUD interface for these entities.
+
+3. Filter by Client. If multiple clients are submitting feature requests, it is important to be able to view the total task list as well as a list filtered by client.
+
+4. Sorting. This one is very important if you've ever worked on a real project and managed client priorities. Decent projects deployed unique sort rank per client. Better projects included sorting per client AND whole all client sorting. The best projects did all of this utilizing a .js drag and drop component binding from the MVVM framework.
+
+5. Discussion Threads. A few projects went far enough to include discussion threads within each feature request and one even included push notifications utilizing SMS.
 
 We also have a strong affinity for open source technology. If your go-to technology stack includes
 proprietary software, you won't be helping yourself to use it in this project.
