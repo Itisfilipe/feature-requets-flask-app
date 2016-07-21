@@ -21,7 +21,9 @@ other feature requests for that client should be reordered.
 'Reports')
 
 ## Tech Stack Suggestions
-The following are recommendations on tech stack. You can build a project outside of these, but this stack is common in our environment and we favor projects that demonstrate command of our tool set:
+The following are recommendations on tech stack. You can build a project outside of this framework,
+but this stack demonstrates mastery of  tools our team favors.
+
 * OS: Ubunutu
 * Server Side Scripting: Python 2.7+ or 3.5+
 * Server Framework: Flask
