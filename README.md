@@ -41,10 +41,10 @@ Email the URL for your github repo to phil@britecore.com once you begin the proj
 your progress. Prior to submission, please bring up a live hosted example. AWS has a free tier if you 
 aren't certain where to host.
 
-## Questions and other such clarification
+## Guidelines
 One of the major goals in this project is to see how you fill in ambiguities in your own creative
 way. There is no such thing as a perfect project here, just interpretations of the instructions
-above, so be creative in your approach. Feel free to send an email with questions about intent or approach.
+above, so be creative in your approach. !!Feel free to email phil@britecore.com with questions.
 
 We want to be respectful of your time and set realistic expectations for submissions. To help guide you, we 
 have included the list below which details features common in the best projects we receive. No project includes
@@ -59,11 +59,11 @@ proprietary software, you won't be helping yourself to use it in this project.
 
 2. *Decoupled Backend*. We are looking for candidates with a strong understanding of the entire web application stack. Move beyond a stock template or the admin page from a CMS. Show off your understanding of how frameworks are put together and create at least a couple of methods that flex your intellectual muscle. The best projects will completely decouple the backend and the front end and communciate via API.
 
-3. *Test Suites with Continuous Integration*. Enterprise production requires rock solid stability. We are very test driven in our development processes and maintain a test suite of many thousands of tests for BriteCore. The best projects include a test suite hooked into a Continuous Integration platform like Jenkins or Travis CI.
+3. *Test Suites with Continuous Integration*. Enterprise production requires rock solid stability. All code submitted into BriteCore repos must contain unit and regressions tests, so we favor candidates with experience writing quality tests. The best projects include a test suite hooked into a Continuous Integration platform like Jenkins or Travis CI.
 
-4. *Automated Deployment*. Speaking of deployment, the most valuable engineers understand how their code is deployed and utilize provisioners such as Salt Stack, Puppet, or Chef. The best projects integrated CI with a fully automated deploy to AWS, Heroku, or similar.
+4. *Automated Deployment*. Speaking of deployment, the most valuable engineers understand how their code is deployed and utilize provisioners such as Salt Stack, Puppet, or Chef. The best projects integrated CI with a fully automated deployment to AWS, Digital Ocean, or similar.
 
-5. *Usable, Responsive Interface*. There are many accessible CSS frameworks out there such as Bootstrap. All modern web applications should be responsive and these frameworks make it very easy to create a responsive modern interface that adheres to established design principles and formats well on all devices.
+5. *Usable, Responsive Interface*. There are many accessible CSS frameworks out there such as Bootstrap. All modern web applications should be responsive and these frameworks make it very easy to create a modern interface that adheres to established design principles and formats well on all devices.
 
 6. *MVVM Frontend*. The modern web is highly interactive. Projects like Knockout.js and Angular make it very easy to deploy HTML bindings that interact with interface elements dependably and efficiently.
 
