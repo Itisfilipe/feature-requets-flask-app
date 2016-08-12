@@ -1,5 +1,5 @@
 # Engineering Project
-This is a project that we use for testing potential employees on their technical skills.
+This is a project that we use for testing potential team members on their technical skills.
 
 ## Feature Request App
 Build a web application that allows the user to create "feature requests".
