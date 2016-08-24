@@ -33,7 +33,7 @@ but this stack demonstrates mastery of  tools our team favors.
 
 Make sure that your instructions for accessing or otherwise running your code are extremely clear.
 
-## Instructions for Submission
+## Guidelines
 
 Build your own public repo on github, and call it whatever you like. Build your solution in your
 repo, and include a README.md file that contains the detailed instructions for running your web app.
@@ -41,14 +41,16 @@ Email the URL for your github repo to phil@britecore.com once you begin the proj
 your progress. Prior to submission, please bring up a live hosted example. AWS has a free tier if you 
 aren't certain where to host.
 
-## Guidelines
 One of the major goals in this project is to see how you fill in ambiguities in your own creative
 way. There is no such thing as a perfect project here, just interpretations of the instructions
-above, so be creative in your approach. !!Feel free to email phil@britecore.com with questions.
+above, so be creative in your approach. While we want to see an expression of your style and problem
+solving, we also want to keep you moving, so please feel free to email phil@britecore.com with questions
+if you get stuck or have questions.
 
-We want to be respectful of your time and set realistic expectations for submissions. To help guide you, we 
-have included the list below which details features common in the best projects we receive. No project includes
-all of these features, but the candidates we hire typically display several of these features in their work.
+We want to be respectful of your time and set realistic expectations for submission. To help guide you, we 
+have included the list below which details common in the best projects we receive. It is rare for 
+a project to match every item in this list, but the candidates we hire typically showcase several of 
+these features in their work.
 
 --
 
@@ -80,4 +82,6 @@ PROJECT FEATURES
 4. *Sorting*. This one is very important if you've ever worked on a real project and managed client priorities. Decent projects deploy unique sort rank per client. Better projects include sorting per client AND whole all client sorting. The best projects do all of this utilizing a drag and drop component bound to the MVVM framework.
 
 5. *Discussion Threads*. A few projects go far enough to include discussion threads within each feature request and one has even included push notifications utilizing SMS.
+
+Thank you for your time. We are excited to review your project!
 
