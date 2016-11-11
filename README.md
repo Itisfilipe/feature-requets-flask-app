@@ -24,7 +24,7 @@ other feature requests for that client should be reordered.
 The following are recommendations on tech stack. You can build a project outside of this framework,
 but this stack demonstrates mastery of  tools our team favors.
 
-* OS: Ubunutu
+* OS: Ubuntu
 * Server Side Scripting: Python 2.7+ or 3.5+
 * Server Framework: Flask
 * ORM: Sql-Alchemy
