@@ -1,0 +1,25 @@
+{
+  "name": "EngineeringMidLevel",
+  "homepage": "https://github.com/xfilipe/EngineeringMidLevel",
+  "authors": [
+    "Filipe T. Amaral <filipetamaral@gmail.com>"
+  ],
+  "description": "midLevel enginnering project for britecore",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "^3.4.2",
+    "bootstrap": "^3.3.7",
+    "sammy": "^0.7.6"
+  },
+  "devDependencies": {
+    "json-server": "^0.10.1"
+  }
+}
