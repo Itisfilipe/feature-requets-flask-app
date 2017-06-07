@@ -1,4 +1,24 @@
 /**
+ * Control transitions between modals
+ */
+function modalControl() {
+  // Events to control modal transitions
+  // Client modal
+  $('#newClientModal').on('show.bs.modal', function(e) {
+    $('#newFeatureModal').modal('toggle');
+  });
+  $('#newClientModal').on('hidden.bs.modal', function(e) {
+    $('#newFeatureModal').modal('toggle');
+  });
+  // Product Area Modal
+  $('#newProductAreaModal').on('show.bs.modal', function(e) {
+    $('#newFeatureModal').modal('toggle');
+  });
+  $('#newProductAreaModal').on('hidden.bs.modal', function(e) {
+    $('#newFeatureModal').modal('toggle');
+  });
+}
+/**
  * Feature model
  * @param data - Feature document provided by the API
  */
@@ -16,16 +36,16 @@ function Feature(data) {
  * @param data - Product Area document provided by the API
  */
 function ProductArea(data) {
-  this.id = ko.observable(data.id);
-  this.name = ko.observable(data.name);
+  this.id = data.id;
+  this.name = data.name;
 }
 /**
  * Client model
  * @param data - Client document provided by the API
  */
 function Client(data) {
-  this.id = ko.observable(data.id);
-  this.name = ko.observable(data.name);
+  this.id = data.id;
+  this.name = data.name;
 }
 
 function FeaturesViewModel() {
@@ -33,23 +53,36 @@ function FeaturesViewModel() {
   var self = this;
   self.features = ko.observableArray([]);
   self.featureDetails = ko.observable();
-  self.areas = ko.observableArray([]);
+  self.newAreaName = ko.observable("");
+  self.newClientName = ko.observable("");
+  self.productAreas = ko.observableArray([]);
   self.clients = ko.observableArray([]);
+  this.selectedClient = ko.observable();
+  this.selectedProductArea = ko.observable();
+
   // Behaviours
   self.goToFeature = function(feature) { location.hash = feature.id() };
   self.goHome = function() { location.hash = '#/' };
   // Operations
-  self.addClient = function() {
-    // save client to api
+  self.addClient = function(client) {
+    var data = {name: self.newClientName()}
+    $.post("http://localhost:3000/clients", data).done(function(s) {
+      self.getClients();
+      self.newClientName("")
+    }).always(function(){ $('#newClientModal').modal('hide'); });;
   };
   self.addProductArea = function() {
-    // save product area to api
+    var data = {name: self.newAreaName()}
+    $.post("http://localhost:3000/productAreas", data).done(function(s) {
+      self.getProductAreas();
+      self.newAreaName("");
+    }).always(function(){ $('#newProductAreaModal').modal('hide'); });
   };
   self.addFeature = function() {
     // save feature to api
   };
   self.getClients = function() {
-    $.getJSON("http://localhost:3000/features?_expand=client&_expand=productArea", function(data) {
+    $.getJSON("http://localhost:3000/clients", function(data) {
       var mappedClients = $.map(data, function(clientData) {
         return new Client(clientData)
       });
@@ -57,11 +90,11 @@ function FeaturesViewModel() {
     });
   }
   self.getProductAreas = function() {
-    $.getJSON("http://localhost:3000/features?_expand=client&_expand=productArea", function(data) {
+    $.getJSON("http://localhost:3000/productAreas", function(data) {
       var mappedAreas = $.map(data, function(areaData) {
-        return new Area(areaData)
+        return new ProductArea(areaData);
       });
-      self.features(mappedAreas);
+      self.productAreas(mappedAreas);
     });
   }
   self.getFeatures = function() {
@@ -72,9 +105,10 @@ function FeaturesViewModel() {
       self.features(mappedFeatures);
     });
   }
-  self.getFeature = function(featureId){
+  self.getFeature = function(featureId) {
     $.getJSON("http://localhost:3000/features/" + featureId, self.featureDetails);
   }
+  // Routes
   Sammy(function() {
     // feature details
     this.get('#:featureId', function() {
@@ -85,7 +119,10 @@ function FeaturesViewModel() {
     this.get('', function() {
       self.featureDetails(null);
       self.getFeatures();
+      self.getProductAreas()
+      self.getClients()
     });
   }).run();
 };
+modalControl();
 ko.applyBindings(new FeaturesViewModel());

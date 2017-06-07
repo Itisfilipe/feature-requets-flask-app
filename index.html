@@ -17,25 +17,16 @@
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
         <a class="navbar-brand" href="#">Features Request</a>
       </div>
       <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <p class="navbar-btn">
-              <a class="btn btn-primary" data-toggle="modal" href='#newFeatureModal'>New Feature</a>
-            </p>
-          </li>
-        </ul>
-      </div>
-      <!-- /.navbar-collapse -->
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <p class="navbar-btn">
+            <a class="btn btn-primary" data-toggle="modal" href='#newFeatureModal'>New Feature</a>
+          </p>
+        </li>
+      </ul>
     </div>
   </nav>
 
@@ -70,10 +61,13 @@
               <div class="form-group">
                 <label for="inputClients" class="col-sm-2 control-label">Clients:</label>
                 <div class="col-sm-6">
-                  <select name="clients" id="inputClients" class="form-control" required="required">
-                    <option value="c1">Client1</option>
+                  <select name="clients" id="inputClients" class="form-control" required="required" data-bind="options: clients,
+                       optionsText: 'name',
+                       value: selectedClient,
+                       optionsCaption: 'Choose...'">
                   </select>
                 </div>
+
                 <!-- PRIORITY -->
                 <label for="inputPriority" class="col-sm-2 control-label">Priority:</label>
                 <div class="col-sm-2">
@@ -85,18 +79,20 @@
                 </div>
               </div>
 
+              <!-- TARGET DATE -->
               <div class="form-group">
                 <label for="inputTargetDate" class="col-sm-2 control-label">Date:</label>
                 <div class="col-sm-4">
                   <input type="date" name="targetDate" id="inputTargetDate" class="form-control" required="required">
                 </div>
 
+                <!-- PRODUCT AREA -->
                 <label for="inputArea" class="col-sm-3 control-label">Product Area:</label>
                 <div class="col-sm-3">
-                  <select name="area" id="inputArea" class="form-control" required="required">
-                    <option value="">Billing</option>
-                    <option value="">Billing</option>
-                    <option value="">Billing</option>
+                  <select id="inputArea" class="form-control" required="required" data-bind="options: productAreas,
+                       optionsText: 'name',
+                       value: selectedProductArea,
+                       optionsCaption: 'Choose...'">
                   </select>
                 </div>
               </div>
@@ -121,15 +117,13 @@
             <h4 class="modal-title">Add Client</h4>
           </div>
           <div class="modal-body">
-            <form action="" method="POST" role="form">
-              <div class="form-group">
-                <input type="text" name="newClientInputModal" id="inputNewClientInputModal" class="form-control" required="required" placeholder="New Client...">
-              </div>
-            </form>
+            <div class="form-group">
+              <input type="text" name="newClientInputModal" id="inputNewClientInputModal" class="form-control" required="required" placeholder="New Client..." data-bind="textInput: newClientName">
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" data-bind="click: $root.addClient">Save changes</button>
           </div>
         </div>
       </div>
@@ -144,15 +138,13 @@
             <h4 class="modal-title">Add Product Area</h4>
           </div>
           <div class="modal-body">
-            <form action="" method="POST" role="form">
-              <div class="form-group">
-                <input type="text" name="newProductAreaModal" id="inputNewProductAreaModal" class="form-control" required="required" placeholder="New Product Area...">
-              </div>
-            </form>
+            <div class="form-group">
+              <input type="text" name="newProductAreaModal" id="inputNewProductAreaModal" class="form-control" required="required" placeholder="New Product Area..." data-bind="textInput: newAreaName">
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" data-bind="click: $root.addProductArea">Save changes</button>
           </div>
         </div>
       </div>
@@ -226,11 +218,9 @@
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <!-- Bootstrap JavaScript -->
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- Bootstrap Tweaks -->
-  <script type="text/javascript" src="bootstrap-tweaks.js"></script>
   <!-- KnockoutJS -->
   <script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
-  <!-- Sammy -->
+  <!-- Sammy JS -->
   <script type="text/javascript" src="bower_components/sammy/lib/min/sammy-latest.min.js"></script>
   <!-- App -->
   <script type="text/javascript" src="app.js"></script>
