@@ -1,0 +1,47 @@
+{
+  "features": [{
+    "id": 0,
+    "title": "some title 1",
+    "description": "some description 1",
+    "date": "10/10/88",
+    "productAreaId": 0,
+    "clientId": 1,
+    "priority": 1
+  }, {
+    "id": 1,
+    "title": "some title 1",
+    "description": "some description 1",
+    "date": "10/10/88",
+    "productAreaId": 1,
+    "clientId": 0,
+    "priority": 1
+  }, {
+    "id": 2,
+    "title": "some title 1",
+    "description": "some description 1",
+    "date": "10/10/88",
+    "productAreaId": 2,
+    "clientId": 1,
+    "priority": 2
+  }],
+  "clients": [{
+    "id": 0,
+    "name": "Filipe"
+  }, {
+    "id": 1,
+    "name": "Jonas"
+  }, {
+    "id": 2,
+    "name": "Turner"
+  }],
+  "productAreas": [{
+    "id": 0,
+    "name": "Billing"
+    }, {
+    "id": 1,
+    "name": "Claims"
+    }, {
+    "id": 2,
+    "name": "Reports"
+    }]
+}

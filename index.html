@@ -40,7 +40,7 @@
   </nav>
 
   <div class="container">
-    <!-- New Feature -->
+    <!-- NEW FEATURE MODAL -->
     <div class="modal fade" id="newFeatureModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -159,67 +159,65 @@
     </div>
 
     <!-- Feature table -->
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </table>
+    <div data-bind="if: features">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Client</th>
+            <th>Target Date</th>
+            <th>Product Area</th>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: features">
+          <tr data-bind="click: $root.goToFeature" style="cursor: pointer">
+            <th scope="row" data-bind="text: id"></th>
+            <td data-bind="text: title"></td>
+            <td data-bind="text: client().name"></td>
+            <td data-bind="text: date"></td>
+            <td data-bind="text: area().name"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- FEATURE DETAILS -->
-    <a class="btn btn-link" href="#" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h1 class="panel-title pull-left">Feature Title</h1>
-        <div class=" btn-group-sm pull-right">
-          <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button>
-          <button type="button" class="btn btn-danger"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</button>
+    <div data-bind="with: featureDetails">
+      <a class="btn btn-link" data-bind="click: $root.goHome" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 class="panel-title pull-left" data-bind="text: title"></h1>
+          <div class=" btn-group-sm pull-right">
+            <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button>
+            <button type="button" class="btn btn-danger"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</button>
+          </div>
+          <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <strong> Product Area: </strong>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Product Area: </strong>
+              <span data-bind="text: productAreaId"></span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Date: </strong>
+              <span data-bind="text: date"></span>
+            </div>
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <strong> Date: </strong>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Client: </strong>
+              <span data-bind="text: clientId"></span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Priority: </strong>
+              <span data-bind="text: priority"></span>
+            </div>
           </div>
+          <strong> Feature Description: </strong>
+          <p data-bind="text: description"></p>
         </div>
-        <div class="row">
-          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <strong> Client: </strong>
-          </div>
-          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <strong> Priority: </strong>
-          </div>
-        </div>
-        <strong> Feature Description: </strong>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore beatae explicabo aperiam non minus ullam ratione, quos porro sint, alias consequuntur ab accusamus repellat voluptatem corporis illo doloribus veniam ut!</p>
       </div>
     </div>
   </div>
@@ -232,6 +230,10 @@
   <script type="text/javascript" src="bootstrap-tweaks.js"></script>
   <!-- KnockoutJS -->
   <script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
+  <!-- Sammy -->
+  <script type="text/javascript" src="bower_components/sammy/lib/min/sammy-latest.min.js"></script>
+  <!-- App -->
+  <script type="text/javascript" src="app.js"></script>
 </body>
 
 </html>

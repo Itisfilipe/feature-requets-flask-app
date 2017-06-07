@@ -18,8 +18,5 @@
     "knockout": "^3.4.2",
     "bootstrap": "^3.3.7",
     "sammy": "^0.7.6"
-  },
-  "devDependencies": {
-    "json-server": "^0.10.1"
   }
 }
