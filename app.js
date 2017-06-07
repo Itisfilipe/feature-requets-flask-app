@@ -31,6 +31,7 @@ function Feature(data) {
   this.date = ko.observable(data.date);
   this.area = ko.observable(new ProductArea(data.productArea));
 }
+
 /**
  * Product Area model
  * @param data - Product Area document provided by the API
@@ -53,14 +54,18 @@ function Client(data) {
 }
 
 function FeaturesViewModel() {
-  // Data
   var self = this;
-  self.features = ko.observableArray([]);
-  self.featureDetails = ko.observable();
-  self.newAreaName = ko.observable("");
-  self.newClientName = ko.observable("");
+  // loaded data from server
   self.productAreas = ko.observableArray([]);
   self.clients = ko.observableArray([]);
+  self.features = ko.observableArray([]);
+  self.featureDetails = ko.observable();
+  // form data
+  self.newAreaName = ko.observable();
+  self.newClientName = ko.observable();
+  self.newTitle = ko.observable();
+  self.newDescription = ko.observable();
+  self.newDate = ko.observable();
   this.selectedClient = ko.observable();
   this.selectedProductArea = ko.observable();
   this.selectedPriority = ko.observable();
@@ -84,7 +89,23 @@ function FeaturesViewModel() {
     }).always(function(){ $('#newProductAreaModal').modal('hide'); });
   };
   self.addFeature = function() {
-    // save feature to api
+    var data = {
+      title: self.newTitle,
+      description: self.newDescription,
+      date: self.newDate,
+      productAreaId: self.selectedProductArea().id,
+      clientId: self.selectedClient().id,
+      priority: self.selectedPriority()
+    };
+    $.post("http://localhost:1234/features", data).done(function(s) {
+      self.newTitle("");
+      self.newDescription("");
+      self.newDate("");
+      self.selectedProductArea("");
+      self.selectedClient("");
+      self.selectedPriority("");
+      self.getFeatures();
+    }).always(function(){ $('#newFeatureModal').modal('hide'); });
   };
   self.getPriorities = function(){
     $.getJSON("http://localhost:1234/clients", function(data) {
