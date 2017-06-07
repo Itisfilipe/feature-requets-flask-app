@@ -11,8 +11,8 @@
     },
     {
       "id": 1,
-      "title": "some title 1",
-      "description": "some description 1",
+      "title": "some title 2",
+      "description": "some description 2",
       "date": "10/10/88",
       "productAreaId": 1,
       "clientId": 0,
@@ -20,8 +20,8 @@
     },
     {
       "id": 2,
-      "title": "some title 1",
-      "description": "some description 1",
+      "title": "some title 3",
+      "description": "some description 3",
       "date": "10/10/88",
       "productAreaId": 2,
       "clientId": 1,
@@ -31,19 +31,23 @@
   "clients": [
     {
       "id": 0,
-      "name": "Filipe"
+      "name": "Filipe",
+      "maxPriorities": 12
     },
     {
       "id": 1,
-      "name": "Jonas"
+      "name": "Jonas",
+      "maxPriorities": 10
     },
     {
       "id": 2,
-      "name": "Turner"
+      "name": "Turner",
+      "maxPriorities": 9
     },
     {
+      "id": 3,
       "name": "newClient1",
-      "id": 3
+      "maxPriorities": 20
     },
     {
       "name": "newclient2",

@@ -69,12 +69,10 @@
                 </div>
 
                 <!-- PRIORITY -->
-                <label for="inputPriority" class="col-sm-2 control-label">Priority:</label>
-                <div class="col-sm-2">
-                  <select name="priority" id="inputPriority" class="form-control" required="required">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <label for="inputPriority" class="col-sm-2 control-label" data-bind="if: selectedClient() !== undefined">Priority:</label>
+                <div class="col-sm-2" data-bind="if: selectedClient() !== undefined">
+                  <select name="priority" id="inputPriority" class="form-control" required="required" data-bind="options: selectedClient().priorities,
+                       value: selectedPriority">
                   </select>
                 </div>
               </div>

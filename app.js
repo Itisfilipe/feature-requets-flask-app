@@ -46,6 +46,10 @@ function ProductArea(data) {
 function Client(data) {
   this.id = data.id;
   this.name = data.name;
+  this.priorities = [];
+  for(var i = 1; i <= +data.maxPriorities; i++){
+    this.priorities.push(i)
+  }
 }
 
 function FeaturesViewModel() {
@@ -59,6 +63,7 @@ function FeaturesViewModel() {
   self.clients = ko.observableArray([]);
   this.selectedClient = ko.observable();
   this.selectedProductArea = ko.observable();
+  this.selectedPriority = ko.observable();
 
   // Behaviours
   self.goToFeature = function(feature) { location.hash = feature.id() };
@@ -66,14 +71,14 @@ function FeaturesViewModel() {
   // Operations
   self.addClient = function(client) {
     var data = {name: self.newClientName()}
-    $.post("http://localhost:3000/clients", data).done(function(s) {
+    $.post("http://localhost:1234/clients", data).done(function(s) {
       self.getClients();
       self.newClientName("")
     }).always(function(){ $('#newClientModal').modal('hide'); });;
   };
   self.addProductArea = function() {
     var data = {name: self.newAreaName()}
-    $.post("http://localhost:3000/productAreas", data).done(function(s) {
+    $.post("http://localhost:1234/productAreas", data).done(function(s) {
       self.getProductAreas();
       self.newAreaName("");
     }).always(function(){ $('#newProductAreaModal').modal('hide'); });
@@ -81,8 +86,16 @@ function FeaturesViewModel() {
   self.addFeature = function() {
     // save feature to api
   };
+  self.getPriorities = function(){
+    $.getJSON("http://localhost:1234/clients", function(data) {
+      var mappedClients = $.map(data, function(clientData) {
+        return new Client(clientData)
+      });
+      self.clients(mappedClients);
+    });
+  }
   self.getClients = function() {
-    $.getJSON("http://localhost:3000/clients", function(data) {
+    $.getJSON("http://localhost:1234/clients", function(data) {
       var mappedClients = $.map(data, function(clientData) {
         return new Client(clientData)
       });
@@ -90,7 +103,7 @@ function FeaturesViewModel() {
     });
   }
   self.getProductAreas = function() {
-    $.getJSON("http://localhost:3000/productAreas", function(data) {
+    $.getJSON("http://localhost:1234/productAreas", function(data) {
       var mappedAreas = $.map(data, function(areaData) {
         return new ProductArea(areaData);
       });
@@ -98,7 +111,7 @@ function FeaturesViewModel() {
     });
   }
   self.getFeatures = function() {
-    $.getJSON("http://localhost:3000/features?_expand=client&_expand=productArea", function(data) {
+    $.getJSON("http://localhost:1234/features?_expand=client&_expand=productArea", function(data) {
       var mappedFeatures = $.map(data, function(featureData) {
         return new Feature(featureData)
       });
@@ -106,7 +119,7 @@ function FeaturesViewModel() {
     });
   }
   self.getFeature = function(featureId) {
-    $.getJSON("http://localhost:3000/features/" + featureId, self.featureDetails);
+    $.getJSON("http://localhost:1234/features/" + featureId, self.featureDetails);
   }
   // Routes
   Sammy(function() {
