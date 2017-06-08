@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Features Request</title>
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -179,8 +179,8 @@
         <div class="panel-heading">
           <h1 class="panel-title pull-left" data-bind="text: title"></h1>
           <div class=" btn-group-sm pull-right">
-            <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button>
-            <button type="button" class="btn btn-danger"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</button>
+            <button type="button" class="btn btn-warning" data-bind="click: $root.editFeature"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button>
+            <button type="button" class="btn btn-danger" data-bind="click: $root.deleteFeature"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</button>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -188,7 +188,7 @@
           <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <strong> Product Area: </strong>
-              <span data-bind="text: productAreaId"></span>
+              <span data-bind="text: productArea.name"></span>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <strong> Date: </strong>
@@ -198,7 +198,7 @@
           <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <strong> Client: </strong>
-              <span data-bind="text: clientId"></span>
+              <span data-bind="text: client.name"></span>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <strong> Priority: </strong>
@@ -213,15 +213,15 @@
   </div>
 
   <!-- jQuery -->
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <!-- Bootstrap JavaScript -->
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- KnockoutJS -->
-  <script type='text/javascript' src='bower_components/knockout/dist/knockout.js'></script>
+  <script src='node_modules/knockout/build/output/knockout-latest.js'></script>
   <!-- Sammy JS -->
-  <script type="text/javascript" src="bower_components/sammy/lib/min/sammy-latest.min.js"></script>
+  <script src="node_modules/sammy/lib/min/sammy-latest.min.js"></script>
   <!-- App -->
-  <script type="text/javascript" src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,32 @@
+{
+  "name": "engineering-mid-level",
+  "version": "1.0.0",
+  "description": "project for britecore",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "front_serve": "node ./node_modules/http-server/bin/http-server",
+    "back_serve": "python server.py",
+    "start": "concurrently --kill-others \"npm run front_serve\" \"npm run back_serve\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xfilipe/EngineeringMidLevel.git"
+  },
+  "author": "Filipe T. Amaral",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xfilipe/EngineeringMidLevel/issues"
+  },
+  "homepage": "https://github.com/xfilipe/EngineeringMidLevel#readme",
+  "dependencies": {
+    "bootstrap": "3.3.7",
+    "jquery": "^3.2.1",
+    "knockout": "3.4.2",
+    "sammy": "0.7.6"
+  },
+  "devDependencies": {
+    "concurrently": "^3.4.0",
+    "http-server": "^0.10.0"
+  }
+}
