@@ -5,9 +5,11 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "front_serve": "node ./node_modules/http-server/bin/http-server",
-    "back_serve": "python server.py",
-    "start": "concurrently --kill-others \"npm run front_serve\" \"npm run back_serve\""
+    "build": "webpack -p",
+    "copyjs": "cp ./dist/app.bundle.js ../backend/static/app.js",
+    "copyhtml": "cp ./index.html ../backend/templates/index.html",
+    "replacestatic": "replace-in-file \"dist/app.bundle.js\" \"{{url_for('static', filename='app.js')}}\" ../backend/templates/index.html",
+    "buildprod": "npm run build && npm run copyjs && npm run copyhtml && npm run replacestatic"
   },
   "repository": {
     "type": "git",
@@ -26,7 +28,10 @@
     "sammy": "0.7.6"
   },
   "devDependencies": {
-    "concurrently": "^3.4.0",
-    "http-server": "^0.10.0"
+    "css-loader": "^0.28.4",
+    "replace-in-file": "^2.5.0",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.6.1"
   }
 }

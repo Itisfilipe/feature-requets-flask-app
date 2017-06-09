@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Features Request</title>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Features Request</a>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <p class="navbar-btn">
+            <a class="btn btn-primary" data-toggle="modal" href='#newFeatureModal'>New Feature</a>
+          </p>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- NEW FEATURE MODAL -->
+    <div class="modal fade" id="newFeatureModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add New Feature</h4>
+          </div>
+          <div class="modal-body">
+            <form action="" method="POST" class="form-horizontal" role="form">
+              <!-- TITLE -->
+              <div class="form-group">
+                <label for="inputTitle" class="col-sm-2 control-label">Title:</label>
+                <div class="col-sm-10">
+                  <input type="text" name="title" id="inputTitle" class="form-control" required="required" data-bind="textInput: newTitle">
+                </div>
+              </div>
+
+              <!-- DESCRIPTION -->
+              <div class="form-group">
+                <label for="textareaDescription" class="col-sm-2 control-label">Description:</label>
+                <div class="col-sm-10">
+                  <textarea name="description" id="textareaDescription" class="form-control" rows="3" required="required" data-bind="textInput: newDescription"></textarea>
+                </div>
+              </div>
+
+              <!-- CLIENTS -->
+              <div class="form-group">
+                <label for="inputClients" class="col-sm-2 control-label">Clients:</label>
+                <div class="col-sm-6">
+                  <select name="clients" id="inputClients" class="form-control" required="required" data-bind="options: clients,
+                       optionsText: 'name',
+                       value: selectedClient,
+                       optionsCaption: 'Choose...'">
+                  </select>
+                </div>
+
+                <!-- PRIORITY -->
+                <label for="inputPriority" class="col-sm-2 control-label" data-bind="if: selectedClient() !== undefined">Priority:</label>
+                <div class="col-sm-2" data-bind="if: selectedClient() !== undefined">
+                  <select name="priority" id="inputPriority" class="form-control" required="required" data-bind="options: selectedClient().priorities,
+                       value: selectedPriority">
+                  </select>
+                </div>
+              </div>
+
+              <!-- TARGET DATE -->
+              <div class="form-group">
+                <label for="inputTargetDate" class="col-sm-2 control-label">Date:</label>
+                <div class="col-sm-4">
+                  <input type="date" name="targetDate" id="inputTargetDate" class="form-control" required="required" data-bind="textInput: newDate">
+                </div>
+
+                <!-- PRODUCT AREA -->
+                <label for="inputArea" class="col-sm-3 control-label">Product Area:</label>
+                <div class="col-sm-3">
+                  <select id="inputArea" class="form-control" required="required" data-bind="options: productAreas,
+                       optionsText: 'name',
+                       value: selectedProductArea,
+                       optionsCaption: 'Choose...'">
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link pull-left" data-toggle="modal" href='#newClientModal'>New Client</button>
+            <button type="button" class="btn btn-link pull-left" data-toggle="modal" href='#newProductAreaModal'>New Product Area</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bind="click: $root.addFeature">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW CLIENT MODAL -->
+    <div class="modal fade" id="newClientModal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add Client</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <input type="text" name="newClientInputModal" id="inputNewClientInputModal" class="form-control" required="required" placeholder="New Client..." data-bind="textInput: newClientName">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bind="click: $root.addClient">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW PRODUCT AREA MODAL -->
+    <div class="modal fade" id="newProductAreaModal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add Product Area</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <input type="text" name="newProductAreaModal" id="inputNewProductAreaModal" class="form-control" required="required" placeholder="New Product Area..." data-bind="textInput: newAreaName">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bind="click: $root.addProductArea">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature table -->
+    <div data-bind="if: features">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Client</th>
+            <th>Target Date</th>
+            <th>Product Area</th>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: features">
+          <tr data-bind="click: $root.goToFeature" style="cursor: pointer">
+            <th scope="row" data-bind="text: id"></th>
+            <td data-bind="text: title"></td>
+            <td data-bind="text: client().name"></td>
+            <td data-bind="text: date"></td>
+            <td data-bind="text: area().name"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FEATURE DETAILS -->
+    <div data-bind="with: featureDetails">
+      <a class="btn btn-link" data-bind="click: $root.goHome" role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 class="panel-title pull-left" data-bind="text: title"></h1>
+          <div class=" btn-group-sm pull-right">
+            <button type="button" class="btn btn-warning" data-bind="click: $root.editFeature"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button>
+            <button type="button" class="btn btn-danger" data-bind="click: $root.deleteFeature"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete</button>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Product Area: </strong>
+              <span data-bind="text: productArea.name"></span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Date: </strong>
+              <span data-bind="text: date"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Client: </strong>
+              <span data-bind="text: client.name"></span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <strong> Priority: </strong>
+              <span data-bind="text: priority"></span>
+            </div>
+          </div>
+          <strong> Feature Description: </strong>
+          <p data-bind="text: description"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="dist/app.bundle.js"></script>
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import json
@@ -295,6 +295,12 @@ def product_areas():
         response = jsonify(results)
         response.status_code = 200
         return response
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
