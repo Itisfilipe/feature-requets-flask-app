@@ -54,7 +54,7 @@ function Client(data) {
 
 function FeaturesViewModel() {
   var self = this;
-  var URL = 'http://127.0.0.1:5000';
+  var URL = 'http://127.0.0.1:5000/api';
   // loaded data from server
   self.productAreas = ko.observableArray([]);
   self.clients = ko.observableArray([]);
