@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from config.config import app_config
 from model import db
 from routes import my_routes
@@ -13,10 +14,12 @@ def create_app(config_name):
     db.init_app(app)
     with app.app_context():
         db.create_all()
+    cors = CORS()
+    cors.init_app(app)
     return app
 
 
 if __name__ == '__main__':
-    config_name = os.getenv('APP_SETTINGS') or 'production'
+    config_name = os.getenv('APP_SETTINGS')
     app = create_app(config_name)
     app.run()

@@ -2,22 +2,32 @@
  * Control transitions between modals
  */
 function modalControl() {
-  // Events to control modal transitions
+  // just show feature modal again if it was open before a new modal appears
+  var featureModalWasOpen = false;
   // New Client modal
   $('#newClientModal').on('show.bs.modal', function(e) {
-    $('#newFeatureModal').modal('toggle');
+    featureModalWasOpen = ($("#newFeatureModal").data('bs.modal') || {}).isShown;
+    $('#newFeatureModal').modal('hide');
   });
   $('#newClientModal').on('hidden.bs.modal', function(e) {
-    $('#newFeatureModal').modal('toggle');
+    if (featureModalWasOpen) {
+      featureModalWasOpen = false;
+      $('#newFeatureModal').modal('show');
+    }
   });
   // New Product Area Modal
   $('#newProductAreaModal').on('show.bs.modal', function(e) {
-    $('#newFeatureModal').modal('toggle');
+    featureModalWasOpen = ($("#newFeatureModal").data('bs.modal') || {}).isShown;
+    $('#newFeatureModal').modal('hide');
   });
   $('#newProductAreaModal').on('hidden.bs.modal', function(e) {
-    $('#newFeatureModal').modal('toggle');
+    if (featureModalWasOpen) {
+      featureModalWasOpen = false;
+      $('#newFeatureModal').modal('show');
+    }
   });
 }
+
 /**
  * Feature model
  * @param data - Feature document provided by the API
@@ -47,9 +57,38 @@ function Client(data) {
   this.id = data.id;
   this.name = data.name;
   this.priorities = [];
+  // generate priorities list for selection
   for (var i = 1; i <= +data.maxPriorities; i++) {
     this.priorities.push(i)
   }
+}
+
+/**
+ * check if some of inputs return a "falsy" value.
+ * @param  inputs - raw inputs
+ * @return {Boolean}   returns true is is valid and false if not
+ */
+function isFormValid(inputs) {
+  return inputs.filter(function(input) {
+    return !input;
+  }).length === 0;
+}
+
+function ajaxRequest(type, url, data, callback) {
+  return $.ajax({
+    type: type,
+    url: url,
+    datatype: 'json',
+    contentType: "application/json",
+    data: data !== null ? JSON.stringify(data) : null,
+    success: callback
+  })
+}
+
+function clearObservables(observables) {
+  observables.forEach(function(observable) {
+    observable(null);
+  });
 }
 
 function FeaturesViewModel() {
@@ -74,34 +113,41 @@ function FeaturesViewModel() {
   self.goHome = function() { location.hash = '#/' };
   // Operations
   self.addClient = function(client) {
+    if (!isFormValid([self.newClientName()])){
+      alert("All inputs are required");
+      return;
+    }
     var data = { name: self.newClientName() }
-    $.ajax({
-      type: "POST",
-      url: URL + "/clients",
-      datatype: 'json',
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      success: function() {
-        self.getClients();
-        self.newClientName("");
-      }
-    }).always(function() { $('#newClientModal').modal('hide'); });;
+    var _url = URL + "/clients";
+    ajaxRequest("POST", _url, data, function() {
+      self.getClients();
+      self.newClientName("");
+    }).always(function() { $('#newClientModal').modal('hide'); });
   };
   self.addProductArea = function() {
+    if (!isFormValid([self.newAreaName()])){
+      alert("All inputs are required");
+      return;
+    }
     var data = { name: self.newAreaName() }
-    $.ajax({
-      type: "POST",
-      url: URL + "/product-areas",
-      datatype: 'json',
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      success: function() {
-        self.getProductAreas();
-        self.newAreaName("");
-      }
+    var _url = URL + "/product-areas";
+    ajaxRequest("POST", _url, data, function() {
+      self.getProductAreas();
+      self.newAreaName("");
     }).always(function() { $('#newProductAreaModal').modal('hide'); });
   };
   self.addFeature = function() {
+    if (!isFormValid([
+        self.newTitle(),
+        self.newDescription(),
+        self.newDate(),
+        self.selectedProductArea(),
+        self.selectedClient(),
+        self.selectedPriority()
+      ])){
+      alert("All inputs are required");
+      return;
+    }
     var data = {
       title: self.newTitle(),
       description: self.newDescription(),
@@ -116,35 +162,24 @@ function FeaturesViewModel() {
       URL_suffix = '/' + self.featureDetails().id;
       method = "PATCH"
     }
-    $.ajax({
-      type: method,
-      url: URL + "/features" + URL_suffix,
-      datatype: 'json',
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      success: function(result) {
-        self.newTitle("");
-        self.newDescription("");
-        self.newDate("");
-        self.selectedProductArea("");
-        self.selectedClient("");
-        self.selectedPriority("");
-        self.getFeatures();
-      }
+    var _url = URL + "/features" + URL_suffix;
+    ajaxRequest(method, _url, data, function(result) {
+      clearObservables([self.newTitle, self.newDescription, self.newDate, self.selectedProductArea,
+        self.selectedClient, self.selectedPriority
+      ]);
+      self.getFeatures();
+      self.goHome();
     }).always(function() { $('#newFeatureModal').modal('hide'); });
   };
   self.deleteFeature = function(data) {
     if (!confirm("Are you sure?")) return;
-    $.ajax({
-      type: "DELETE",
-      url: URL + "/features/" + data.id,
-      success: function(result) {
-        self.featureDetails(null);
-        self.getFeatures();
-        self.getProductAreas();
-        self.getClients();
-        self.goHome();
-      }
+    var _url = URL + "/features/" + data.id;
+    ajaxRequest("DELETE", _url, data, function(result) {
+      self.featureDetails(null);
+      self.getFeatures();
+      self.getProductAreas();
+      self.getClients();
+      self.goHome();
     });
   }
   self.editFeature = function(data) {
@@ -162,16 +197,9 @@ function FeaturesViewModel() {
     self.selectedPriority(data.priority);
     $('#newFeatureModal').modal('show');
   }
-  self.getPriorities = function() {
-    $.getJSON(URL + "/clients", function(data) {
-      var mappedClients = $.map(data, function(clientData) {
-        return new Client(clientData)
-      });
-      self.clients(mappedClients);
-    });
-  }
   self.getClients = function() {
-    $.getJSON(URL + "/clients", function(data) {
+    var _url = URL + "/clients";
+    ajaxRequest("GET", _url, null, function(data) {
       var mappedClients = $.map(data, function(clientData) {
         return new Client(clientData)
       });
@@ -179,7 +207,8 @@ function FeaturesViewModel() {
     });
   }
   self.getProductAreas = function() {
-    $.getJSON(URL + "/product-areas", function(data) {
+    var _url = URL + "/product-areas";
+    ajaxRequest("GET", _url, null, function(data) {
       var mappedAreas = $.map(data, function(areaData) {
         return new ProductArea(areaData);
       });
@@ -187,7 +216,8 @@ function FeaturesViewModel() {
     });
   }
   self.getFeatures = function() {
-    $.getJSON(URL + "/features", function(data) {
+    var _url = URL + "/features";
+    ajaxRequest("GET", _url, null, function(data) {
       var mappedFeatures = $.map(data, function(featureData) {
         return new Feature(featureData)
       });
@@ -195,7 +225,8 @@ function FeaturesViewModel() {
     });
   }
   self.getFeature = function(featureId) {
-      $.getJSON(URL + "/features/" + featureId, self.featureDetails);
+      var _url = URL + "/features/" + featureId;
+      ajaxRequest("GET", _url, null, self.featureDetails);
     }
     // Routes
   Sammy(function() {
@@ -215,5 +246,6 @@ function FeaturesViewModel() {
     });
   }).run();
 };
+
 modalControl();
 ko.applyBindings(new FeaturesViewModel());

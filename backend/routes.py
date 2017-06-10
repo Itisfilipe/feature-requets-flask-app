@@ -4,6 +4,16 @@ from model import Feature, Client, ProductArea
 
 my_routes = Blueprint('routes', __name__, template_folder='templates')
 
+
+def reorganize_priorities(features, new_feature):
+    '''Reorganize feature prioties and save it into db'''
+    for feature in features:
+        if feature.priority >= new_feature.priority:
+            feature.priority += 1
+            feature.save()
+    new_feature.save()
+
+
 @my_routes.route('/api/features', methods=['POST', 'GET'], strict_slashes=False)
 def features():
     if request.method == "POST":
@@ -23,13 +33,14 @@ def features():
                 product_area_id=product_area_id,
                 client_id=client_id
             )
-            new_feature.save()
+            features = Feature.query.filter_by(client_id=client_id)
+            reorganize_priorities(features, new_feature)
             client = Client.query.filter_by(id=new_feature.client_id).first()
             product_area = ProductArea.query.filter_by(id=new_feature.client_id).first()
             if not client or not product_area:
-              # it would be better use 424 but for simplicity lets use
-              # already implemented codes
-              abort(404)
+                # it would be better use 424 but for simplicity lets use
+                # already implemented codes
+                abort(404)
             client_obj = {
                 'id': client.id,
                 'name': client.name
@@ -49,10 +60,11 @@ def features():
             })
             response.status_code = 201
             return response
+        else:
+            abort(400)
     else:  # GET
         features = Feature.get_all()
         results = []
-
         for feature in features:
             client = Client.query.filter_by(id=feature.client_id).first()
             client_obj = {
