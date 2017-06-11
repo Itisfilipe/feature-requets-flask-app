@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_cors import CORS
-from config.config import app_config
+from config import app_config
 from model import db
 from routes import my_routes
 

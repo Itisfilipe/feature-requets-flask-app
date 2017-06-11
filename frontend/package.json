@@ -4,7 +4,7 @@
   "description": "project for britecore",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jasmine",
     "build": "webpack -p",
     "copyjs": "cp ./dist/app.bundle.js ../backend/static/app.js",
     "copyhtml": "cp ./index.html ../backend/templates/index.html",
