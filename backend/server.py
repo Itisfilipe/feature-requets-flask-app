@@ -20,6 +20,6 @@ def create_app(config_name):
 
 
 if __name__ == '__main__':
-    config_name = os.getenv('APP_SETTINGS')
+    config_name = os.getenv('APP_SETTINGS') or 'production'
     app = create_app(config_name)
     app.run()

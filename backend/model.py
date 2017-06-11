@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import make_transient
 
 
 db = SQLAlchemy()
@@ -33,6 +34,10 @@ class Feature(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def new_version(self):
+        make_transient(self)
+        self.id = None
 
     def __repr__(self):
         return '<Feature %r>' % self.title

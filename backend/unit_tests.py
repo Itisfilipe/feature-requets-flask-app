@@ -203,9 +203,8 @@ class FeatureTestCase(unittest.TestCase):
         res = self.client_instance().get('/api/features/1')
         self.assertEqual(res.status_code, 404)
 
-    def test_priority_reorganization(self):
-        """Test if priorities for some client will reorganize after choose one
-            that was already taken"""
+    def test_priority_reorganization_when_create(self):
+        """Test if priorities for some client will reorganize after create"""
         create_product_area(self)
         create_client(self)
         create_feature(self)
@@ -218,6 +217,54 @@ class FeatureTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         data_obj = json.loads(res.get_data(as_text=True))
         self.assertEqual(data_obj["priority"], 2)
+
+    def test_priority_reorganization_when_editing(self):
+        """Test if priorities for some client will reorganize after edit"""
+        create_product_area(self)
+        create_client(self)
+        create_feature(self)
+        create_feature(self)
+        create_feature(self)
+        res = self.client_instance().get('/api/features/2')
+        data_obj = json.loads(res.get_data(as_text=True))
+        data_obj["priority"] -= 1
+        old_priority = data_obj["priority"]
+        old_id = data_obj["id"]
+        data_obj["clientId"] = data_obj["client"]["id"]
+        data_obj["productAreaId"] = data_obj["productArea"]["id"]
+        del data_obj["client"]
+        del data_obj["productArea"]
+        self.client_instance().patch('/api/features/2', data=json.dumps(data_obj))
+        res = self.client_instance().get('/api/features')
+        data_obj = json.loads(res.get_data(as_text=True))
+        features = sorted(data_obj, key=lambda i: i["priority"])
+        for index, feature in enumerate(features, 1):
+            if feature["id"] == old_id:
+                # priority was changed properly
+                self.assertEqual(old_priority, feature["priority"])
+            # check if priorities are in order
+            self.assertEqual(index, feature["priority"])
+
+    def test_priority_reorganization_when_delete(self):
+        """Test if priorities for some client will reorganize after delete"""
+        create_product_area(self)
+        create_client(self)
+        create_feature(self)
+        create_feature(self)
+        create_feature(self)
+        res = self.client_instance().get('/api/features/2')
+        data = json.loads(res.get_data(as_text=True))
+        res = self.client_instance().delete('/api/features/2')
+        self.assertEqual(res.status_code, 200)
+        res = self.client_instance().get('/api/features')
+        data_obj = json.loads(res.get_data(as_text=True))
+        features = sorted(data_obj, key=lambda i: i["priority"])
+        for index, feature in enumerate(features, 1):
+            # the old object must no be in the features list
+            self.assertNotEqual(data["id"], feature["id"])
+            # check if priorities are with right values
+            self.assertEqual(index, feature["priority"])
+
 
     def tearDown(self):
         """teardown all initialized variables."""

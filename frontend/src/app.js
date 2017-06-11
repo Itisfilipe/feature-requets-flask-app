@@ -169,13 +169,14 @@ function FeaturesViewModel() {
                 self.getFeature(self.featureDetails().id)
             } else {
                 self.getFeatures();
+                self.getClients();
             }
         }).always(function() { $('#newFeatureModal').modal('hide'); });
     };
     self.deleteFeature = function(data) {
         if (!confirm("Are you sure?")) return;
         var _url = URL + "/features/" + data.id;
-        ajaxRequest("DELETE", _url, data, function() {
+        ajaxRequest("DELETE", _url, null, function() {
             self.featureDetails(null);
             self.getFeatures();
             self.getProductAreas();
