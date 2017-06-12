@@ -1,36 +1,11 @@
 import json
-from flask import request, jsonify, abort, render_template, Blueprint
-from model import Feature, Client, ProductArea
 
+from flask import Blueprint, abort, jsonify, render_template, request
+
+from models import Client, Feature, ProductArea, db
+from utils import insert_item_by_priority, rearrange_priorities_of_ordered_list
 
 my_routes = Blueprint('routes', __name__, template_folder='templates')
-
-
-def reorganize_priorities(selected_feature, deletion=False, old_priority=None):
-    '''Reorganize feature prioties and save it into db'''
-
-    # if is a deletion or edition op, remove it from db first
-    if deletion or old_priority is not None:
-        selected_feature.delete()
-        selected_feature.new_version()
-
-    features = Feature.query.filter_by(client_id=selected_feature.client_id)
-    if features.first() is None:
-        if not deletion:
-            selected_feature.save()
-        return
-
-    # I will use the fact that a priority is equal to the position of feature
-    # into a list of ordered by priorities features
-    ordered_features = sorted(features, key=lambda i: i.priority)
-    if not deletion:
-        ordered_features.insert(selected_feature.priority - 1, selected_feature)
-
-    for index, feature in enumerate(ordered_features, 1):
-        # recalculate and save it if needed or if is the edited feature
-        if index != feature.priority or feature.id is None:
-            feature.priority = index
-            feature.save()
 
 
 @my_routes.route('/api/features', methods=['POST', 'GET'], strict_slashes=False)
@@ -52,12 +27,15 @@ def features():
                 product_area_id=product_area_id,
                 client_id=client_id
             )
-            reorganize_priorities(new_feature)
-            client = Client.query.filter_by(id=new_feature.client_id).first()
-            product_area = ProductArea.query.filter_by(id=new_feature.client_id).first()
+            features = Feature.query.order_by(Feature.priority).filter_by(client_id=client_id).all()
+            features = insert_item_by_priority(features, new_feature)
+            features = rearrange_priorities_of_ordered_list(features)
+            db.session.add(new_feature)
+            db.session.commit()
+
+            client = Client.query.get_or_404(client_id)
+            product_area = ProductArea.query.get_or_404(product_area_id)
             if not client or not product_area:
-                # it would be better use 424 but for simplicity lets use
-                # already implemented codes
                 abort(404)
             client_obj = {
                 'id': client.id,
@@ -84,12 +62,13 @@ def features():
         features = Feature.get_all()
         results = []
         for feature in features:
-            client = Client.query.filter_by(id=feature.client_id).first()
+            client = Client.query.get_or_404(feature.client_id)
             client_obj = {
                 'id': client.id,
                 'name': client.name
             }
-            product_area = ProductArea.query.filter_by(id=feature.client_id).first()
+            product_area = ProductArea.query.get_or_404(
+                feature.product_area.id)
             product_area_obj = {
                 'id': product_area.id,
                 'name': product_area.name
@@ -111,32 +90,60 @@ def features():
 
 @my_routes.route('/api/features/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def feature(id, **kwargs):
-    feature = Feature.query.filter_by(id=id).first()
-    if not feature:
-        abort(404)
-
+    feature = Feature.query.get_or_404(id)
     if request.method == 'DELETE':
-        reorganize_priorities(feature, deletion=True)
+        client_id = feature.client_id
+        feature.delete()
+        features = Feature.query.filter_by(client_id=client_id).order_by(Feature.priority).all()
+        if features:
+            features = rearrange_priorities_of_ordered_list(features)
+        db.session.commit()
         response = jsonify({"message": "feature \"{}\" deleted successfully".format(feature.title)})
         response.status_code = 200
         return response
 
     elif request.method == 'PATCH':
         data = json.loads(request.get_data(as_text=True))
+        old_id = feature.client_id
+        new_id = int(data.get('clientId', '-1'))
         old_priority = feature.priority
-        feature.title = str(data.get('title', ''))
-        feature.description = str(data.get('description', ''))
-        feature.date = str(data.get('date', ''))
-        feature.priority = int(data.get('priority', '-1'))
-        feature.product_area_id = int(data.get('productAreaId', '-1'))
-        feature.client_id = int(data.get('clientId', '-1'))
-        reorganize_priorities(feature, old_priority=old_priority)
-        client = Client.query.filter_by(id=feature.client_id).first()
+        print(old_id, feature.client_id)
+        if (old_id != new_id):
+            print('cade')
+            features = Feature.query.filter_by(client_id=new_id).order_by(Feature.priority).all()
+            feature.title = str(data.get('title', ''))
+            feature.description = str(data.get('description', ''))
+            feature.date = str(data.get('date', ''))
+            feature.product_area_id = int(data.get('productAreaId', '-1'))
+            feature.priority = int(data.get('priority', '-1'))
+            feature.client_id = new_id
+            features = insert_item_by_priority(features, feature)
+            features = rearrange_priorities_of_ordered_list(features)
+            db.session.commit()
+            features = Feature.query.filter_by(client_id=old_id).order_by(Feature.priority).all()
+            features = rearrange_priorities_of_ordered_list(features)
+            for f in features:
+                print(f.priority)
+            db.session.commit()
+        else:
+            features = Feature.query.filter_by(client_id=old_id).order_by(Feature.priority).all()
+            del features[old_priority - 1]
+            features = rearrange_priorities_of_ordered_list(features)
+            feature.title = str(data.get('title', ''))
+            feature.description = str(data.get('description', ''))
+            feature.date = str(data.get('date', ''))
+            feature.product_area_id = int(data.get('productAreaId', '-1'))
+            feature.priority = int(data.get('priority', '-1'))
+            feature.client_id = new_id
+            features = insert_item_by_priority(features, feature)
+            features = rearrange_priorities_of_ordered_list(features)
+            db.session.commit()
+        client = Client.query.get_or_404(feature.client_id)
         client_obj = {
             'id': client.id,
             'name': client.name
         }
-        product_area = ProductArea.query.filter_by(id=feature.product_area_id).first()
+        product_area = ProductArea.query.get_or_404(feature.product_area_id)
         product_area_obj = {
             'id': product_area.id,
             'name': product_area.name
@@ -153,12 +160,12 @@ def feature(id, **kwargs):
         response.status_code = 200
         return response
     else:  # GET
-        client = Client.query.filter_by(id=feature.client_id).first()
+        client = Client.query.get_or_404(feature.client_id)
         client_obj = {
             'id': client.id,
             'name': client.name
         }
-        product_area = ProductArea.query.filter_by(id=feature.client_id).first()
+        product_area = ProductArea.query.get_or_404(feature.product_area_id)
         product_area_obj = {
             'id': product_area.id,
             'name': product_area.name
@@ -194,7 +201,8 @@ def clients():
         clients = Client.get_all()
         results = []
         for client in clients:
-            max_priorities = Feature.query.filter_by(client_id=client.id).count() + 1
+            max_priorities = Client.query.get_or_404(
+                client.id).features.count() + 1
             obj = {
                 'id': client.id,
                 'name': client.name,

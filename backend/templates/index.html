@@ -97,7 +97,7 @@
                         <button type="button" class="btn btn-link pull-left" data-toggle="modal" href='#newClientModal'>New Client</button>
                         <button type="button" class="btn btn-link pull-left" data-toggle="modal" href='#newProductAreaModal'>New Product Area</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-bind="click: $root.addFeature">Save</button>
+                        <button type="button" class="btn btn-primary" data-bind="click: $root.addFeature ">Save</button>
                     </div>
                 </div>
             </div>
@@ -146,20 +146,20 @@
         </div>
 
         <!-- Feature table -->
-        <h3 class="text-center" data-bind="if: clients() && clients().length === 0">
-      You need to have at least one <a data-toggle="modal" href='#newClientModal'>Client</a> to add a Feature.
-    </h3>
-        <h3 class="text-center" data-bind="if: productAreas() && productAreas().length === 0">
-      You need to have at least one <a data-toggle="modal" href='#newProductAreaModal'>Product Area</a> to add a Feature.
-    </h3>
-        <h3 class="text-center" data-bind="if: productAreas() && productAreas().length > 0 && clients() && clients().length > 0 && features() && features().length === 0">
-      <a data-toggle="modal" href='#newFeatureModal'>Click here</a> to add a new feature.
-    </h3>
+        <div data-bind="if: clients() && clients().length === 0">
+          <h3 class="text-center">You need to have at least one <a data-toggle="modal" href='#newClientModal'>Client</a> to add a Feature.</h3>
+        </div>
+        <div data-bind="if: productAreas() && productAreas().length === 0">
+          <h3 class="text-center">You need to have at least one <a data-toggle="modal" href='#newProductAreaModal'>Product Area</a> to add a Feature.</h3>
+        </div>
+        <div data-bind="if: productAreas() && productAreas().length > 0 && clients() && clients().length > 0 && features() && features().length === 0">
+          <h3 class="text-center"><a data-toggle="modal" href='#newFeatureModal'>Click here</a> to add a new feature.</h3>
+        </div>
         <div data-bind="if: features() && features().length > 0">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>Priority</th>
                         <th>Title</th>
                         <th>Client</th>
                         <th>Target Date</th>
@@ -168,7 +168,7 @@
                 </thead>
                 <tbody data-bind="foreach: features">
                     <tr data-bind="click: $root.goToFeature" style="cursor: pointer">
-                        <th scope="row" data-bind="text: id"></th>
+                        <th scope="row" data-bind="text: priority"></th>
                         <td data-bind="text: title"></td>
                         <td data-bind="text: client().name"></td>
                         <td data-bind="text: date"></td>

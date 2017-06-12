@@ -1,5 +1,6 @@
-import unittest
 import json
+import unittest
+
 from server import create_app, db
 
 
@@ -15,8 +16,11 @@ def create_product_area(self):
     return res
 
 
-def create_feature(self):
-    res = self.client_instance().post('/api/features/', data=self.feature)
+def create_feature(self, feature=None):
+    if (feature is None):
+        res = self.client_instance().post('/api/features/', data=self.feature)
+    else:
+        res = self.client_instance().post('/api/features/', data=feature)
     self.assertEqual(res.status_code, 201)
     return res
 
@@ -132,12 +136,29 @@ class FeatureTestCase(unittest.TestCase):
             'productAreaId': 1,
             'title': "some title"
         })
+        self.feature2 = json.dumps({
+            'clientId': 1,
+            'date': "2017-06-07",
+            'description': "some description",
+            'priority': 1,
+            'productAreaId': 1,
+            'title': "some title2"
+        })
+        self.feature3 = json.dumps({
+            'clientId': 1,
+            'date': "2017-06-07",
+            'description': "some description",
+            'priority': 2,
+            'productAreaId': 1,
+            'title': "some title3"
+        })
         with self.app.app_context():
             db.create_all()
 
     def test_feature_creation(self):
         """Test API can create a feature (POST request)"""
-        # It must not be possible to create a feature without client and product area
+        # It must not be possible to create a feature without client and
+        # product area
         res = self.client_instance().post('/api/features/', data=self.feature)
         self.assertEqual(res.status_code, 404)
         create_product_area(self)
@@ -207,29 +228,42 @@ class FeatureTestCase(unittest.TestCase):
         """Test if priorities for some client will reorganize after create"""
         create_product_area(self)
         create_client(self)
-        create_feature(self)
+        # priority 1
+        create_feature(self, self.feature)
+        # priority 1
+        create_feature(self, self.feature2)
+        # priority 2
+        create_feature(self, self.feature3)
+        # priority for first id must be 3
         res = self.client_instance().get('/api/features/1')
+        self.assertEqual(res.status_code, 200)
+        data_obj = json.loads(res.get_data(as_text=True))
+        self.assertEqual(data_obj["priority"], 3)
+        # priority for first id must be 1
+        res = self.client_instance().get('/api/features/2')
         self.assertEqual(res.status_code, 200)
         data_obj = json.loads(res.get_data(as_text=True))
         self.assertEqual(data_obj["priority"], 1)
-        create_feature(self)
-        res = self.client_instance().get('/api/features/1')
+         # priority for first id must be 2
+        res = self.client_instance().get('/api/features/3')
         self.assertEqual(res.status_code, 200)
         data_obj = json.loads(res.get_data(as_text=True))
         self.assertEqual(data_obj["priority"], 2)
+
 
     def test_priority_reorganization_when_editing(self):
         """Test if priorities for some client will reorganize after edit"""
         create_product_area(self)
         create_client(self)
         create_feature(self)
-        create_feature(self)
-        create_feature(self)
+        create_feature(self, self.feature2)
+        create_feature(self, self.feature2)
+        create_feature(self, self.feature3)
+        create_feature(self, self.feature3)
+        # get data with priority 4
         res = self.client_instance().get('/api/features/2')
         data_obj = json.loads(res.get_data(as_text=True))
-        data_obj["priority"] -= 1
-        old_priority = data_obj["priority"]
-        old_id = data_obj["id"]
+        data_obj["priority"] = 2
         data_obj["clientId"] = data_obj["client"]["id"]
         data_obj["productAreaId"] = data_obj["productArea"]["id"]
         del data_obj["client"]
@@ -239,9 +273,9 @@ class FeatureTestCase(unittest.TestCase):
         data_obj = json.loads(res.get_data(as_text=True))
         features = sorted(data_obj, key=lambda i: i["priority"])
         for index, feature in enumerate(features, 1):
-            if feature["id"] == old_id:
+            if feature["id"] == 2:
                 # priority was changed properly
-                self.assertEqual(old_priority, feature["priority"])
+                self.assertEqual(2, feature["priority"])
             # check if priorities are in order
             self.assertEqual(index, feature["priority"])
 
@@ -264,7 +298,6 @@ class FeatureTestCase(unittest.TestCase):
             self.assertNotEqual(data["id"], feature["id"])
             # check if priorities are with right values
             self.assertEqual(index, feature["priority"])
-
 
     def tearDown(self):
         """teardown all initialized variables."""

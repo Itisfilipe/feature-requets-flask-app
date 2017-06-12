@@ -1,33 +1,4 @@
 /**
- * Control transitions between modals
- */
-function modalControl() {
-    // just show feature modal again if it was open before a new modal appears
-    var featureModalWasOpen = false;
-    // New Client modal
-    $('#newClientModal').on('show.bs.modal', function() {
-        featureModalWasOpen = ($("#newFeatureModal").data('bs.modal') || {}).isShown;
-        $('#newFeatureModal').modal('hide');
-    });
-    $('#newClientModal').on('hidden.bs.modal', function() {
-        if (featureModalWasOpen) {
-            featureModalWasOpen = false;
-            $('#newFeatureModal').modal('show');
-        }
-    });
-    // New Product Area Modal
-    $('#newProductAreaModal').on('show.bs.modal', function() {
-        featureModalWasOpen = ($("#newFeatureModal").data('bs.modal') || {}).isShown;
-        $('#newFeatureModal').modal('hide');
-    });
-    $('#newProductAreaModal').on('hidden.bs.modal', function() {
-        if (featureModalWasOpen) {
-            featureModalWasOpen = false;
-            $('#newFeatureModal').modal('show');
-        }
-    });
-}
-/**
  * Feature model
  * @param data - Feature document provided by the API
  */
@@ -92,6 +63,7 @@ function clearObservables(observables) {
 function FeaturesViewModel() {
     var self = this;
     var URL = 'http://127.0.0.1:5000/api';
+    self.isEdit = false;
     // loaded data from server
     self.productAreas = ko.observableArray([]);
     self.clients = ko.observableArray([]);
@@ -136,13 +108,13 @@ function FeaturesViewModel() {
     };
     self.addFeature = function() {
         if (!isFormValid([
-            self.newTitle(),
-            self.newDescription(),
-            self.newDate(),
-            self.selectedProductArea(),
-            self.selectedClient(),
-            self.selectedPriority()
-        ])) {
+                self.newTitle(),
+                self.newDescription(),
+                self.newDate(),
+                self.selectedProductArea(),
+                self.selectedClient(),
+                self.selectedPriority()
+            ])) {
             alert("All inputs are required");
             return;
         }
@@ -156,20 +128,21 @@ function FeaturesViewModel() {
         };
         var method = "POST";
         var URL_suffix = "";
-        var isEdit = false;
-        if (self.featureDetails() !== null) {
+        if (self.isEdit) {
             URL_suffix = '/' + self.featureDetails().id;
             method = "PATCH";
-            isEdit = true;
         }
         var _url = URL + "/features" + URL_suffix;
         ajaxRequest(method, _url, data, function() {
             clearObservables([self.newTitle, self.newDescription, self.newDate, self.selectedProductArea, self.selectedClient, self.selectedPriority]);
-            if(isEdit) {
+            if (self.isEdit) {
                 self.getFeature(self.featureDetails().id)
+                self.isEdit = false;
             } else {
                 self.getFeatures();
                 self.getClients();
+                self.getProductAreas();
+                self.goHome();
             }
         }).always(function() { $('#newFeatureModal').modal('hide'); });
     };
@@ -185,6 +158,7 @@ function FeaturesViewModel() {
         });
     };
     self.editFeature = function(data) {
+        self.isEdit = true;
         self.newTitle(data.title);
         self.newDescription(data.description);
         self.newDate(data.date);
@@ -220,6 +194,9 @@ function FeaturesViewModel() {
     self.getFeatures = function() {
         var _url = URL + "/features";
         ajaxRequest("GET", _url, null, function(data) {
+            data.sort(function(a, b) {
+                return a.priority - b.priority;
+            })
             var mappedFeatures = $.map(data, function(featureData) {
                 return new Feature(featureData);
             });
@@ -230,7 +207,7 @@ function FeaturesViewModel() {
         var _url = URL + "/features/" + featureId;
         ajaxRequest("GET", _url, null, self.featureDetails);
     };
-        // Routes
+    // Routes
     Sammy(function() {
         // feature details
         this.get('#:featureId', function() {
@@ -247,10 +224,41 @@ function FeaturesViewModel() {
             self.getClients();
         });
     }).run();
+    self.listeners = function() {
+        $('#newFeatureModal').on('hidden.bs.modal', function() {
+            self.isEdit = false;
+            clearObservables([self.newTitle, self.newDescription, self.newDate, self.selectedProductArea, self.selectedClient, self.selectedPriority]);
+        });
+        // just show the page after everything is loaded
+        $(document).ready(function() {
+            $('body').show();
+        });
+        // just show feature modal again if it was open before a new modal appears
+        var featureModalWasOpen = false;
+        // New Client modal
+        $('#newClientModal').on('show.bs.modal', function() {
+            featureModalWasOpen = ($("#newFeatureModal").data('bs.modal') || {}).isShown;
+            $('#newFeatureModal').modal('hide');
+        });
+        $('#newClientModal').on('hidden.bs.modal', function() {
+            if (featureModalWasOpen) {
+                featureModalWasOpen = false;
+                $('#newFeatureModal').modal('show');
+            }
+        });
+        // New Product Area Modal
+        $('#newProductAreaModal').on('show.bs.modal', function() {
+            featureModalWasOpen = ($("#newFeatureModal").data('bs.modal') || {}).isShown;
+            $('#newFeatureModal').modal('hide');
+        });
+        $('#newProductAreaModal').on('hidden.bs.modal', function() {
+            if (featureModalWasOpen) {
+                featureModalWasOpen = false;
+                $('#newFeatureModal').modal('show');
+            }
+        });
+    }
 }
-// just show the page after everything is loaded
-$(document).ready(function() {
-    $('body').show();
-});
-modalControl();
-ko.applyBindings(new FeaturesViewModel());
+var app = new FeaturesViewModel()
+app.listeners();
+ko.applyBindings(app);

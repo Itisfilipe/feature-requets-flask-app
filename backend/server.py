@@ -1,9 +1,11 @@
 import os
+
+from routes import my_routes
+
+from config import app_config
 from flask import Flask
 from flask_cors import CORS
-from config import app_config
-from model import db
-from routes import my_routes
+from models import db
 
 
 def create_app(config_name):
