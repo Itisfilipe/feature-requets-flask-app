@@ -1,4 +1,12 @@
 @import url('../node_modules/bootstrap/dist/css/bootstrap.min.css');
+
+.navbar-right {
+    float: right !important;
+    margin-right: 15px !important;
+}
+.navbar-nav {
+     margin: 0 !important; 
+}
 .panel .row {
   margin-bottom: 14px;
 }

@@ -27,13 +27,13 @@ function Client(data) {
     this.id = data.id;
     this.name = data.name;
     this.priorities = [];
-    // generate priorities list for selection
+    // generate priorities list for browser select
     for (var i = 1; i <= +data.maxPriorities; i++) {
         this.priorities.push(i);
     }
 }
 /**
- * check if some of inputs return a "falsy" value.
+ * check if some of inputs returns invalid data.
  * @param  inputs - raw inputs
  * @return {Boolean}   returns true is is valid and false if not
  */
@@ -43,6 +43,14 @@ function isFormValid(inputs) {
     }).length === 0;
 }
 
+/**
+ * Wrapper for ajax calls
+ * @param  {string}   type - type of call (POST, GET, etc...)
+ * @param  {strin}   url - URI for resource
+ * @param  {object}   data - data or null if needed
+ * @param  {Function} callback - Function to be executed after success
+ * @return {Promise}
+ */
 function ajaxRequest(type, url, data, callback) {
     return $.ajax({
         type: type,
@@ -54,21 +62,32 @@ function ajaxRequest(type, url, data, callback) {
     });
 }
 
+/**
+ * Clear a list of observables
+ * @param  {Arra<Observable>} observables - List of observables
+ */
 function clearObservables(observables) {
     observables.forEach(function(observable) {
         observable(null);
     });
 }
 
+/**
+ * App Model
+ */
 function FeaturesViewModel() {
+    // variable to "hold" the scope
     var self = this;
+    // some const values
     var URL = 'http://127.0.0.1:5000/api';
     self.isEdit = false;
+
     // loaded data from server
     self.productAreas = ko.observableArray([]);
     self.clients = ko.observableArray([]);
     self.features = ko.observableArray([]);
     self.featureDetails = ko.observable();
+
     // form data
     self.newAreaName = ko.observable();
     self.newClientName = ko.observable();
@@ -78,9 +97,11 @@ function FeaturesViewModel() {
     self.selectedClient = ko.observable();
     self.selectedProductArea = ko.observable();
     self.selectedPriority = ko.observable();
+
     // Behaviours
     self.goToFeature = function(feature) { location.hash = feature.id(); };
     self.goHome = function() { location.hash = '#/'; };
+
     // Operations
     self.addClient = function() {
         if (!isFormValid([self.newClientName()])) {
@@ -207,6 +228,7 @@ function FeaturesViewModel() {
         var _url = URL + "/features/" + featureId;
         ajaxRequest("GET", _url, null, self.featureDetails);
     };
+
     // Routes
     Sammy(function() {
         // feature details
@@ -216,7 +238,7 @@ function FeaturesViewModel() {
             self.getProductAreas();
             self.getClients();
         });
-        // index/features list
+        // index (features list)
         this.get('', function() {
             self.featureDetails(null);
             self.getFeatures();
@@ -224,6 +246,8 @@ function FeaturesViewModel() {
             self.getClients();
         });
     }).run();
+
+    // listenner that must be registred at initialization
     self.listeners = function() {
         $('#newFeatureModal').on('hidden.bs.modal', function() {
             self.isEdit = false;
@@ -259,6 +283,7 @@ function FeaturesViewModel() {
         });
     }
 }
+
 var app = new FeaturesViewModel()
 app.listeners();
 ko.applyBindings(app);

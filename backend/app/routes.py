@@ -1,11 +1,13 @@
 import json
 
-from flask import Blueprint, abort, jsonify, render_template, request
+from flask import Blueprint, render_template, request
 
-from models import Client, Feature, ProductArea, db
-from utils import insert_item_by_priority, rearrange_priorities_of_ordered_list
+from flask_api import status, exceptions
 
-my_routes = Blueprint('routes', __name__, template_folder='templates')
+from .models import Client, Feature, ProductArea, db
+from .utils import insert_item_by_priority, rearrange_priorities_of_ordered_list
+
+my_routes = Blueprint('routes', __name__)
 
 
 @my_routes.route('/api/features', methods=['POST', 'GET'], strict_slashes=False)
@@ -35,8 +37,6 @@ def features():
 
             client = Client.query.get_or_404(client_id)
             product_area = ProductArea.query.get_or_404(product_area_id)
-            if not client or not product_area:
-                abort(404)
             client_obj = {
                 'id': client.id,
                 'name': client.name
@@ -45,7 +45,7 @@ def features():
                 'id': product_area.id,
                 'name': product_area.name
             }
-            response = jsonify({
+            response = {
                 'id': new_feature.id,
                 'title': new_feature.title,
                 'description': new_feature.description,
@@ -53,11 +53,10 @@ def features():
                 'productArea': product_area_obj,
                 'client': client_obj,
                 'priority': new_feature.priority
-            })
-            response.status_code = 201
-            return response
+            }
+            return response, status.HTTP_201_CREATED
         else:
-            abort(400)
+            raise exceptions.ParseError()
     else:  # GET
         features = Feature.get_all()
         results = []
@@ -83,9 +82,8 @@ def features():
                 'priority': feature.priority
             }
             results.append(obj)
-        response = jsonify(results)
-        response.status_code = 200
-        return response
+        response = results
+        return response, status.HTTP_200_OK
 
 
 @my_routes.route('/api/features/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
@@ -95,21 +93,21 @@ def feature(id, **kwargs):
         client_id = feature.client_id
         feature.delete()
         features = Feature.query.filter_by(client_id=client_id).order_by(Feature.priority).all()
+        # after one feature is deleted we need to rearrange the others
         if features:
             features = rearrange_priorities_of_ordered_list(features)
         db.session.commit()
-        response = jsonify({"message": "feature \"{}\" deleted successfully".format(feature.title)})
-        response.status_code = 200
-        return response
+        response = {"message": "feature \"{}\" deleted successfully".format(feature.title)}
+        return response, status.HTTP_200_OK
 
     elif request.method == 'PATCH':
         data = json.loads(request.get_data(as_text=True))
         old_id = feature.client_id
         new_id = int(data.get('clientId', '-1'))
         old_priority = feature.priority
-        print(old_id, feature.client_id)
+        # we need a different treatment if the client is changed
         if (old_id != new_id):
-            print('cade')
+            # first we get all features of the new selected client
             features = Feature.query.filter_by(client_id=new_id).order_by(Feature.priority).all()
             feature.title = str(data.get('title', ''))
             feature.description = str(data.get('description', ''))
@@ -117,17 +115,22 @@ def feature(id, **kwargs):
             feature.product_area_id = int(data.get('productAreaId', '-1'))
             feature.priority = int(data.get('priority', '-1'))
             feature.client_id = new_id
+            # we insert our feature
             features = insert_item_by_priority(features, feature)
+            # rearrange everything and then save
             features = rearrange_priorities_of_ordered_list(features)
             db.session.commit()
+            # all the features from our client that was selected before
+            # are desorganized so we rearrange it to be correct
             features = Feature.query.filter_by(client_id=old_id).order_by(Feature.priority).all()
             features = rearrange_priorities_of_ordered_list(features)
-            for f in features:
-                print(f.priority)
             db.session.commit()
-        else:
+        else:  # the client wasn't changed, just the priority and maybe other info
             features = Feature.query.filter_by(client_id=old_id).order_by(Feature.priority).all()
+            # delete the priority from the list. Notice that the position of priority in the list
+            # is equal of the priority itself - 1
             del features[old_priority - 1]
+            # rearrange all priorities
             features = rearrange_priorities_of_ordered_list(features)
             feature.title = str(data.get('title', ''))
             feature.description = str(data.get('description', ''))
@@ -135,7 +138,9 @@ def feature(id, **kwargs):
             feature.product_area_id = int(data.get('productAreaId', '-1'))
             feature.priority = int(data.get('priority', '-1'))
             feature.client_id = new_id
+            # insert the edited priority in the right place
             features = insert_item_by_priority(features, feature)
+            # rearrange it again
             features = rearrange_priorities_of_ordered_list(features)
             db.session.commit()
         client = Client.query.get_or_404(feature.client_id)
@@ -148,7 +153,7 @@ def feature(id, **kwargs):
             'id': product_area.id,
             'name': product_area.name
         }
-        response = jsonify({
+        response = {
             'id': feature.id,
             'title': feature.title,
             'description': feature.description,
@@ -156,9 +161,8 @@ def feature(id, **kwargs):
             'productArea': product_area_obj,
             'client': client_obj,
             'priority': feature.priority
-        })
-        response.status_code = 200
-        return response
+        }
+        return response, status.HTTP_200_OK
     else:  # GET
         client = Client.query.get_or_404(feature.client_id)
         client_obj = {
@@ -170,7 +174,7 @@ def feature(id, **kwargs):
             'id': product_area.id,
             'name': product_area.name
         }
-        response = jsonify({
+        response = {
             'id': feature.id,
             'title': feature.title,
             'description': feature.description,
@@ -178,9 +182,8 @@ def feature(id, **kwargs):
             'productArea': product_area_obj,
             'client': client_obj,
             'priority': feature.priority
-        })
-        response.status_code = 200
-        return response
+        }
+        return response, status.HTTP_200_OK
 
 
 @my_routes.route('/api/clients', methods=['POST', 'GET'], strict_slashes=False)
@@ -191,12 +194,13 @@ def clients():
         if name:
             client = Client(name=name)
             client.save()
-            response = jsonify({
+            response = {
                 'id': client.id,
                 'name': client.name
-            })
-            response.status_code = 201
-            return response
+            }
+            return response, status.HTTP_201_CREATED
+        else:
+            raise exceptions.ParseError()
     else:  # GET
         clients = Client.get_all()
         results = []
@@ -209,9 +213,8 @@ def clients():
                 'maxPriorities': max_priorities
             }
             results.append(obj)
-        response = jsonify(results)
-        response.status_code = 200
-        return response
+        response = results
+        return response, status.HTTP_200_OK
 
 
 @my_routes.route('/api/product-areas', methods=['POST', 'GET'], strict_slashes=False)
@@ -222,12 +225,13 @@ def product_areas():
         if name:
             product_area = ProductArea(name=name)
             product_area.save()
-            response = jsonify({
+            response = {
                 'id': product_area.id,
                 'name': product_area.name
-            })
-            response.status_code = 201
-            return response
+            }
+            return response, status.HTTP_201_CREATED
+        else:
+            raise exceptions.ParseError()
     else:  # GET
         product_areas = ProductArea.get_all()
         results = []
@@ -238,9 +242,8 @@ def product_areas():
                 'name': product_area.name
             }
             results.append(obj)
-        response = jsonify(results)
-        response.status_code = 200
-        return response
+        response = results
+        return response, status.HTTP_200_OK
 
 
 @my_routes.route('/')

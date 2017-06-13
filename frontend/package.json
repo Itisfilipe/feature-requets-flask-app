@@ -4,11 +4,10 @@
   "description": "project for britecore",
   "main": "app.js",
   "scripts": {
-    "test": "jasmine",
     "build": "webpack -p",
-    "copyjs": "cp ./dist/app.bundle.js ../backend/static/app.js",
-    "copyhtml": "cp ./index.html ../backend/templates/index.html",
-    "replacestatic": "replace-in-file \"dist/app.bundle.js\" \"{{url_for('static', filename='app.js')}}\" ../backend/templates/index.html",
+    "copyjs": "cp ./dist/app.bundle.js ../backend/app/static/app.js",
+    "copyhtml": "cp ./index.html ../backend/app/templates/index.html",
+    "replacestatic": "replace-in-file \"dist/app.bundle.js\" \"{{url_for('static', filename='app.js')}}\" ../backend/app/templates/index.html",
     "buildprod": "npm run build && npm run copyjs && npm run copyhtml && npm run replacestatic"
   },
   "repository": {

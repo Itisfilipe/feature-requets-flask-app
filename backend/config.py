@@ -1,12 +1,19 @@
+import os
+
+
 class Config(object):
     """Parent configuration class."""
     SQLALCHEMY_DATABASE_URI = 'sqlite:///./db.sqlite3'
     CSRF_ENABLED = True
+    SECRET = os.getenv('SECRET')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class DevelopmentConfig(Config):
+    """Configurations for Development, with a separate dev database."""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///./db_dev.sqlite3'
+    SECRET = 'secret-key'
 
 
 class TestingConfig(Config):
