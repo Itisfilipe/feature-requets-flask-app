@@ -21,11 +21,12 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///./db_test.sqlite3'
     DEBUG = True
-    LIVESERVER_PORT=8943
+    LIVESERVER_PORT = 8943
 
 
 class ProductionConfig(Config):
     """Configurations for Production."""
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///./db.sqlite3'
     DEBUG = False
     TESTING = False
 
