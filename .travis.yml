@@ -5,6 +5,7 @@ python:
 install:
   # python dependencies
   - pip install -r backend/requirements.txt
+  - pip install -r backend/requirements-dev.txt
   - pip install coveralls --quiet
 
 script:

@@ -38,7 +38,7 @@ Notice that this application was made in order to show some skills in a set of t
     ```
 * Git clone this repo to your PC
     ```
-        $ git clone git@github.com:xfilipe/EngineeringMidLevel.git feature-app
+        $ git clone https://github.com/xfilipe/EngineeringMidLevel.git feature-app
     ```
 
 
@@ -47,9 +47,10 @@ Notice that this application was made in order to show some skills in a set of t
         ```
         $ cd feature-app
         ```
-    2. Build the front end app. It will build everything and make a copy to backend folder so it can be served by flask server.
+    2. Build the front end app. It will build everything and make a copy of index.html to backend folder so it can be served by flask.
        ```
         $ cd frontend
+        $ npm install
         $ npm run buildprod
         ```
     3. Go to backend folder and then create and fire up your virtual environment in python3:
@@ -70,10 +71,11 @@ Notice that this application was made in order to show some skills in a set of t
 * #### Install your requirements
     ```
     (venv)$ pip install -r requirements.txt
+    (venv)$ pip install -r requirements-dev.txt
     ```
 
 * #### Running It
-    On your terminal, run the server using this one simple command:
+    On your terminal, inside of backend folder, run the server using this one simple command:
     ```
     (venv)$ flask run
     ```
