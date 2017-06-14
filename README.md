@@ -2,6 +2,21 @@
 
 "a web application that allows the user to create "feature requests"."
 
+**Live APP at http://xfilipe.pythonanywhere.com/**
+
+## Initial Considerations
+Notice that this application was made in order to show some skills in a set of technologies, many "features" are not implemented because they are time consuming and also I have some considerations about the app:
+
+* CI is just for check the app agains tests, the front-end's build and the deployment must be done manually.
+* The app was hosted within pythonanywhere. I'm a linux user and I did some deploys in the past but now it was the only free host that I could have (also the easiest to deploy).
+* The API is not RESTful and the routes doesn't have full CRUD operations. They are designed just to match the especification. So, for example, you can't delete or edit clients and product areas.
+* There's just unit tests! Some people agree that unit tests without integration tests doens't not perform so well to warranty the integrity of the application and others may agree that unit tests if well written are good enoght for that job.
+* Front-end wasn't tested, this may fall into last section where integration tests should be written to check the app UI.
+* Front-end maybe is too coupled. Since I don't have enough experience with knockoutJS I'm not qualified to decide if theres a better way to organized the code.
+* Product Area has no effect in Clients neither in Priorities. The only complex relation is between Clients and Priorities.
+* There's no authentication and any kind of protection for sensitive information.
+* The performance of the app wasn't tested.
+
 ## Technologies used
 * **[Python3](https://www.python.org/downloads/)** - A programming language that lets you work more quickly (The universe loves speed!).
 * **[Virtualenv](https://virtualenv.pypa.io/en/stable/)** - A tool to create isolated virtual environments
@@ -71,16 +86,6 @@
     ```
     It will run all tests and also show the coverage report into terminal
 
-## Notes
-Notice that this application was made in order to show some skills in a number of technologies, so some things are not done because they are too time consuming, also some considerations have to be done:
-
-* The API is not RESTful and the routes doesn't have full CRUD operations. They are designed just to match the especification. So, for example, you can't delete or edit clients and product areas.
-* There's just unit tests! Some people agree that unit tests without integration tests doens't not perform so well to warranty the integrity of the application and others may agree that unit tests if well written are good enoght for that job.
-* Front-end wasn't tested, this may fall into last section where integration tests should be written to check the app UI.
-* Front-end maybe is too coupled. Since I don't have enough experience with knockoutJS I'm not qualified to decide if theres a better way to organized the code.
-* Product Area has no effect in Clients neither in Priorities. The only complex relation is between Clients and Priorities.
-* There's no authentication and any kind of protection for sensitive information.
-* The performance of the app wasn't tested.
 
 ## License
 MIT License
