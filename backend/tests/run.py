@@ -4,6 +4,7 @@ import unittest
 
 cov = coverage(branch=True, include=['app/*'])
 cov.set_option('report:show_missing', True)
+cov.erase()
 cov.start()
 
 from .client_test import ClientTestCase
@@ -17,4 +18,3 @@ if __name__ == '__main__':
     cov.save()
     print("\n\nCoverage Report:\n")
     cov.report()
-    cov.erase()

@@ -1,4 +1,5 @@
-# Features Request App
+# Features Request App [![Coverage Status](https://coveralls.io/repos/github/xfilipe/EngineeringMidLevel/badge.svg)](https://coveralls.io/github/xfilipe/EngineeringMidLevel) [![Build Status](https://travis-ci.org/xfilipe/EngineeringMidLevel.svg?branch=master)](https://travis-ci.org/xfilipe/EngineeringMidLevel)
+
 "a web application that allows the user to create "feature requests"."
 
 ## Technologies used
