@@ -95,7 +95,7 @@ Notice that this application was made in order to show some skills in a set of t
 ## License
 MIT License
 
-Copyright (c) 2017 Jee Githinji Gikera
+Copyright (c) 2017 Filipe Teixeira Amaral
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
