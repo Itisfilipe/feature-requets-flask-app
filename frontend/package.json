@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/xfilipe/EngineeringMidLevel#readme",
   "dependencies": {
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "jquery": "^3.2.1",
     "knockout": "3.4.2",
     "sammy": "0.7.6"
