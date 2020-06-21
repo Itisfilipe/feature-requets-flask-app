@@ -1,4 +1,4 @@
-Flask==0.12.2
+Flask==1.0
 Flask-API==0.7.1
 Flask-SQLAlchemy==2.2
 Markdown==2.6.8
