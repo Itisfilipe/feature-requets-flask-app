@@ -1,23 +1,6 @@
 # Features Request App [![Coverage Status](https://coveralls.io/repos/github/Itisfilipe/EngineeringMidLevel/badge.svg)](https://coveralls.io/github/Itisfilipe/EngineeringMidLevel) [![Build Status](https://travis-ci.org/Itisfilipe/EngineeringMidLevel.svg?branch=master)](https://travis-ci.org/Itisfilipe/EngineeringMidLevel)
 
-A web application that allows the user to create "feature requests".
-
-Live APP at http://xfilipe.pythonanywhere.com/ but you will need an password to view it. If you are here you should have one but if not just ask me at filipetamaral [AT] gmail [dot] com
-
-## First Considerations
-Notice that this application was made in order to show some skills in a set of technologies, many "features" are not implemented because they are time consuming. Also, I have some considerations about the app:
-
-* CI is just for check the app against tests, the front-end build and the deployment must be done manually.
-* The app was hosted within pythonanywhere. I'm a linux user and I did some deploys in the past but now it was the only free host that I could have (also the easiest to deploy). Important: free sites have a limited time span, so the app will be online until Thursday 14 September 2017.
-* The API doens't match all the requeriments to be considered RESTful and the routes doesn't have full CRUD operations. They are designed just to match the specification. So, for example, you can't delete or edit clients and product areas.
-* There's just unit tests! Some people agree that unit tests without integration tests doens't not perform so well to warranty the integrity of the application and others may agree that unit tests if well written are good enoght for that job. I didn't implemented integrations test because is time consuming to do it although I believe that is important to have them along side unit tests.
-* Front-end wasn't tested, this may fall into last section where integration tests should be written to check the app UI.
-* Front-end maybe is too coupled. Since I don't have enough experience with knockoutJS I'm not qualified to decide if there's a better way to organized the code.
-* Product Area has no effect in Clients neither in Priorities. The only complex relation is between Clients and Priorities.
-* There's no authentication and any kind of protection for sensitive information.
-* The performance of the app wasn't tested.
-* I used sqlite for simplicity.
-* The last but not less important, I didn't write down how to use the app. If the app does not explain yourself I believe is because the UX is bad/wrong and should be changed.
+A web application that allows the user to create `feature requests`.
 
 ## Technologies used
 * **[Python3](https://www.python.org/downloads/)** - A programming language that lets you work more quickly (The universe loves speed!).
