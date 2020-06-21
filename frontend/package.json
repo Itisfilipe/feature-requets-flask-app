@@ -23,7 +23,7 @@
   "dependencies": {
     "bootstrap": "3.3.7",
     "jquery": "^3.2.1",
-    "knockout": "3.4.2",
+    "knockout": "3.5.1",
     "sammy": "0.7.6"
   },
   "devDependencies": {
